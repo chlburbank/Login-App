@@ -33,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
         var btnSignIn: Button = findViewById(R.id.btnSignIn);
         var btnLogIn: Button = findViewById(R.id.btnLogIn);
         var btnModify: Button = findViewById(R.id.btnModify);
+        var btnDelete: Button = findViewById(R.id.btnDelete);
 
         btnSignIn.setOnClickListener {
             val admin = AdminSQLiteOpenHelper(this, "userTable", null, 1);
@@ -72,6 +73,20 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this,"The password has been modified", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "The user does not exist", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        btnDelete.setOnClickListener{
+            val admin = AdminSQLiteOpenHelper(this, "userTable", null, 1);
+            val db = admin.writableDatabase;
+            val row = db.delete("usuarios", "usuario = ? AND contraseña = ?", arrayOf(userField.text.toString(), passwordField.text.toString()));
+            db.close();
+            userField.setText("");
+            passwordField.setText("");
+            if (row == 1) {
+                Toast.makeText(this,"User Deleted.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this,"Could not delete specified user.", Toast.LENGTH_SHORT).show()
             }
         }
 
